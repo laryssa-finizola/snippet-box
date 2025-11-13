@@ -1,0 +1,29 @@
+// 1. Bloco "Generator"
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 2. Bloco "Datasource" (A parte importante que lê o .env)
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// 3. Seus "Models"
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  snippets  Snippet[] // Um usuário pode ter MUITOS snippets
+}
+
+model Snippet {
+  id          Int     @id @default(autoincrement())
+  title       String
+  language    String  // JS, TS, CSS...
+  description String? // O '?' torna opcional
+  code        String
+
+  author    User    @relation(fields: [authorId], references: [id])
+  authorId  Int     // Chave estrangeira
+}
