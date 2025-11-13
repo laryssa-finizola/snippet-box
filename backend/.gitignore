@@ -1,5 +1,11 @@
-node_modules
-# Keep environment variables out of version control
+# Dependências
+node_modules/
+
+# Arquivos de Ambiente (NÃO PODE IR PRO GITHUB!)
 .env
 
-/generated/prisma
+# Banco de Dados SQLite
+prisma/dev.db
+prisma/dev.db-journal
+
+proximos_passos.md
