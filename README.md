@@ -1,11 +1,11 @@
 # 🚀 Snippet-Box
 
-![Status](https://img.shields.io/badge/status-em_desenvolvimento-yellow)
+![Status](https://img.shields.io/badge/status-MVP_funcional-green)
 
 Um gerenciador de snippets de código full-stack. Este projeto foi criado como parte do meu portfólio para demonstrar habilidades em uma arquitetura **monorepo** com:
 
 * **Backend:** Node.js, Express, Prisma (com SQLite) e TypeScript.
-* **Frontend:** Next.js, React, TailwindCSS e TypeScript.
+* **Frontend:** Next.js, React, TailwindCSS e TypeScript (com Server Actions).
 
 ---
 
@@ -26,21 +26,27 @@ Este repositório contém dois projetos independentes que trabalham juntos:
 | Express | React 18 |
 | Prisma (ORM) | TailwindCSS |
 | SQLite | TypeScript |
-| TypeScript | |
+| TypeScript | Server Actions |
 
 ---
 
-## STATUS ATUAL (Work In Progress)
+## STATUS ATUAL (MVP Concluído)
 
 * **[✅] Backend:**
     * Servidor Node.js + Express + TS configurado.
     * Banco de dados SQLite configurado com Prisma.
     * Migração inicial (`User`, `Snippet`) concluída.
     * Endpoint `POST /api/snippets` (Create) funcional.
-    * Endpoint `GET /api/snippets` (Read) funcional.
+    * Endpoint `GET /api/snippets` (Read All) funcional.
+    * Endpoint `GET /api/snippets/:id` (Read One) funcional.
+    * Endpoint `PUT /api/snippets/:id` (Update) funcional.
+    * Endpoint `DELETE /api/snippets/:id` (Delete) funcional.
 * **[✅] Frontend:**
-    * Projeto Next.js 14 inicializado.
-    * TypeScript e TailwindCSS configurados.
+    * Projeto Next.js 14 inicializado com App Router.
+    * Conectado à API (GET, POST, PUT, DELETE).
+    * Página principal (`/`) com formulário de criação e lista de snippets.
+    * Página de edição (`/snippets/[id]/edit`) com formulário pré-preenchido.
+    * Server Actions para `create`, `delete` e `update` sem `fetch` no lado do cliente.
 
 ---
 
@@ -92,9 +98,9 @@ Para rodar este projeto, você precisará de **dois terminais** abertos simultan
 
 ---
 
-## 📋 API Endpoints (Em Andamento)
+## 📋 API Endpoints (CRUD Completo)
 
-Abaixo estão os endpoints da API que já foram implementados.
+Abaixo estão todos os endpoints da API implementados.
 
 **URL Base:** `http://localhost:8080`
 
@@ -106,13 +112,13 @@ Cria um novo snippet de código.
 * **Body (JSON):**
     ```json
     {
-      "title": "Meu Primeiro Snippet",
+      "title": "Meu Snippet",
       "language": "javascript",
-      "description": "Um teste de olá mundo",
-      "code": "console.log('Hello World!');"
+      "description": "Uma descrição",
+      "code": "console.log('Olá');"
     }
     ```
-* **Nota:** Atualmente, o `authorId` está "hardcoded" (fixo) como `1` para fins de teste, até a autenticação ser implementada.
+* **Nota:** Atualmente, o `authorId` está "hardcoded" (fixo) como `1` para fins de teste.
 
 ### 2. Listar todos os Snippets
 Busca todos os snippets salvos no banco de dados.
@@ -121,5 +127,60 @@ Busca todos os snippets salvos no banco de dados.
 * **URL:** `/api/snippets`
 * **Nota:** Atualmente, este endpoint busca snippets de *todos* os usuários.
 
+### 3. Buscar um Snippet
+Busca um snippet específico pelo seu ID.
+
+* **Método:** `GET`
+* **URL:** `/api/snippets/:id` (ex: `/api/snippets/1`)
+* **Resposta de Sucesso (200 - OK):**
+    ```json
+    {
+      "id": 1,
+      "title": "Meu Snippet",
+      "language": "javascript",
+      "description": "Uma descrição",
+      "code": "console.log('Olá');",
+      "authorId": 1
+    }
+    ```
+
+### 4. Atualizar um Snippet
+Atualiza um snippet específico pelo seu ID.
+
+* **Método:** `PUT`
+* **URL:** `/api/snippets/:id` (ex: `/api/snippets/1`)
+* **Body (JSON):**
+    ```json
+    {
+      "title": "Novo Título",
+      "language": "typescript",
+      "description": "Nova descrição",
+      "code": "console.log('Novo');"
+    }
+    ```
+* **Resposta de Sucesso (200 - OK):**
+    (Retorna o snippet atualizado)
+
+### 5. Deletar um Snippet
+Deleta um snippet específico pelo seu ID.
+
+* **Método:** `DELETE`
+* **URL:** `/api/snippets/:id` (ex: `/api/snippets/1`)
+* **Resposta de Sucesso (204 - No Content):**
+    (Nenhum conteúdo é retornado)
+
 ---
 
+## 🎯 Próximos Passos (Roadmap)
+
+O MVP (CRUD) está completo. Os próximos passos são:
+
+* [ ] **Autenticação:**
+    * **Backend:** Implementar rotas `/register` e `/login` com JWT.
+    * **Backend:** Proteger rotas de CRUD (só o "dono" pode alterar/deletar).
+    * **Frontend:** Criar as páginas de Login e Registro.
+* [ ] **Polimento:**
+    * **Frontend:** Adicionar **Syntax Highlighting** para exibir o código formatado.
+* [ ] **Deploy:**
+    * **Backend:** Fazer deploy da API no **Render**.
+    * **Frontend:** Fazer deploy do site na **Vercel**.
