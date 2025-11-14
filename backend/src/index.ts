@@ -1,63 +1,115 @@
+// backend/src/index.ts
+
 import express from 'express';
 import { PrismaClient } from '@prisma/client';
+import cors from 'cors';
 
-// inicio das ferramentas 
-const app = express();            // inicio do servidor Express
-const prisma = new PrismaClient();  // inicio do cliente do Prisma
+const app = express();
+const prisma = new PrismaClient();
 
-// express entende o JSON 
+app.use(cors());
 app.use(express.json());
 
-// --- primeiro endpoint: create ---
+// --- Endpoint de CRIAR (CREATE) ---
 app.post('/api/snippets', async (req, res) => {
+  // ... (seu código de create - sem mudança)
   try {
-    // recebe os dados do snippet do corpo da requisição
     const { title, language, description, code } = req.body;
-
-    // prisma cria um novo snippet no banco de dados
-    // authorId = 1 para teste
     const newSnippet = await prisma.snippet.create({
       data: {
         title: title,
         language: language,
         description: description,
         code: code,
-        authorId: 1, // TODO: Mudar isso quando tiver login real
+        authorId: 1, // TODO: Mudar quando tiver login
       },
     });
-
-    // Devolve o snippet que acabou de ser criado como resposta
     res.status(201).json(newSnippet);
-
   } catch (error) {
-    // Se algo der errado (ex: um campo obrigatório faltou)
     console.error(error);
     res.status(500).json({ error: 'Erro ao criar o snippet' });
   }
 });
-  // --- SEGUNDO ENDPOINT (read) ---
-// Quando o front-end enviar um GET para 'http://localhost:8080/api/snippets'
+
+// --- Endpoint de LER (READ ALL) ---
 app.get('/api/snippets', async (req, res) => {
   try {
-    // o prisma busca TODOS os snippets
-    // Por enquanto, de TODOS os usuários
     const snippets = await prisma.snippet.findMany({
-      // TODO: Filtrar pelo authorId do usuário logado
-      // where: { authorId: 1 } 
+      // TODO: Filtrar pelo authorId
     });
-
-    // 2. Devolve a lista de snippets como resposta
     res.status(200).json(snippets);
-
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Erro ao buscar os snippets' });
   }
 });
 
+// --- NOVO ENDPOINT: LER UM (READ ONE) ---
+app.get('/api/snippets/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const snippet = await prisma.snippet.findUnique({
+      where: { id: id },
+    });
+
+    if (!snippet) {
+      return res.status(404).json({ error: 'Snippet não encontrado' });
+    }
+
+    res.status(200).json(snippet);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao buscar o snippet' });
+  }
+});
+
+// --- NOVO ENDPOINT: ATUALIZAR (UPDATE) ---
+app.put('/api/snippets/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    const { title, language, description, code } = req.body;
+
+    const updatedSnippet = await prisma.snippet.update({
+      where: {
+        id: id,
+        // TODO: Checar o authorId
+      },
+      data: {
+        title: title,
+        language: language,
+        description: description,
+        code: code,
+      },
+    });
+
+    res.status(200).json(updatedSnippet);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao atualizar o snippet' });
+  }
+});
+
+
+// --- Endpoint de DELETAR (DELETE) ---
+app.delete('/api/snippets/:id', async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    await prisma.snippet.delete({
+      where: {
+        id: id,
+        // TODO: Checar o authorId
+      },
+    });
+    res.status(204).send();
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao deletar o snippet' });
+  }
+});
+
 
 // "Liga" o servidor
-const PORT = 8080; // A porta que o backend vai usar
+const PORT = 8080; 
 app.listen(PORT, () => {
   console.log(`🚀 Servidor backend rodando na porta ${PORT}`);
 });
