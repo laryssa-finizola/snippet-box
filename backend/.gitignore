@@ -1,11 +1,13 @@
 # Dependências
 node_modules/
 
-# Arquivos de Ambiente (NÃO PODE IR PRO GITHUB!)
+# Arquivos de Ambiente 
 .env
 
 # Banco de Dados SQLite
 prisma/dev.db
 prisma/dev.db-journal
 
+
+#extra
 proximos_passos.md
