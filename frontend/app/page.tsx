@@ -1,10 +1,9 @@
-import { createSnippet, logoutUser } from './actions'; 
+import { createSnippet, logoutUser } from './actions';
 import { PackageIcon } from './PackageIcon';
 import { SnippetCard } from './SnippetCard';
-import { Plus, Code2, LogOut } from 'lucide-react'; 
-import { cookies } from 'next/headers'; 
-import { redirect } from 'next/navigation'; 
-
+import { Plus, Code2, LogOut } from 'lucide-react';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 // --- TYPE (Definição do Snippet) ---
 type Snippet = {
@@ -25,13 +24,16 @@ async function getSnippets(): Promise<Snippet[]> {
   }
 
   try {
-    const res = await fetch('http://localhost:8080/api/snippets', {
-      cache: 'no-store',
-      headers: {
-        'Authorization': `Bearer ${token}`, 
-      },
-    });
-    
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/snippets`,
+      {
+        cache: 'no-store',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
     if (res.status === 401) {
       redirect('/login');
     }
@@ -90,11 +92,14 @@ export default async function Home() {
               Novo Snippet
             </h2>
           </div>
-          
+
           <form action={createSnippet} className="p-8 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label htmlFor="title" className="block text-sm font-medium text-gray-400">
+                <label
+                  htmlFor="title"
+                  className="block text-sm font-medium text-gray-400"
+                >
                   Título
                 </label>
                 <input
@@ -107,7 +112,10 @@ export default async function Home() {
                 />
               </div>
               <div className="space-y-2">
-                <label htmlFor="language" className="block text-sm font-medium text-gray-400">
+                <label
+                  htmlFor="language"
+                  className="block text-sm font-medium text-gray-400"
+                >
                   Linguagem
                 </label>
                 <input
@@ -116,12 +124,15 @@ export default async function Home() {
                   id="language"
                   required
                   placeholder="Ex: JavaScript, Python"
-                  className="w-full bg-gray-800/50 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-[#d965e6] focus:ring-2 focus:ring-[#d965e6]/50 transition-all"
+                  className="w-full bg-gray-800/50 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder:text-gray-500 focus:outline-none focus:border-[#d965e6] focus:ring-2 focus:ring-[#d965e6]/5D"
                 />
               </div>
             </div>
             <div className="space-y-2">
-              <label htmlFor="description" className="block text-sm font-medium text-gray-400">
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium text-gray-400"
+              >
                 Descrição
               </label>
               <input
@@ -133,7 +144,10 @@ export default async function Home() {
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="code" className="block text-sm font-medium text-gray-400">
+              <label
+                htmlFor="code"
+                className="block text-sm font-medium text-gray-400"
+              >
                 Código
               </label>
               <textarea
@@ -159,7 +173,9 @@ export default async function Home() {
         <div className="space-y-6">
           <div className="flex items-center gap-3">
             <Code2 className="w-6 h-6 text-[#d965e6]" />
-            <h2 className="text-lg font-semibold text-[#d965e6]">Meus Snippets</h2>
+            <h2 className="text-lg font-semibold text-[#d965e6]">
+              Meus Snippets
+            </h2>
           </div>
 
           {snippets.length === 0 && (

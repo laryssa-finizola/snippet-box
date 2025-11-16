@@ -1,10 +1,9 @@
 import { updateSnippet } from '../../../actions';
-import { PackageIcon } from '../../../PackageIcon'; 
+import { PackageIcon } from '../../../PackageIcon';
 import Link from 'next/link';
 import { use } from 'react';
-import { cookies } from 'next/headers'; 
-import { redirect } from 'next/navigation'; 
-
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 // --- TYPE (Definição do Snippet) ---
 type Snippet = {
@@ -16,7 +15,7 @@ type Snippet = {
   authorId: number;
 };
 type EditPageProps = {
-  params: Promise<{ id: string }>; 
+  params: Promise<{ id: string }>;
 };
 
 // --- Função para buscar UM snippet  ---
@@ -28,29 +27,28 @@ async function getSnippetById(id: string): Promise<Snippet | null> {
   }
 
   try {
-    const url = `http://localhost:8080/api/snippets/${id}`;
+    const url = `${process.env.NEXT_PUBLIC_API_URL}/api/snippets/${id}`;
     console.log(`[Frontend Server] Tentando buscar: ${url}`);
 
     const res = await fetch(url, {
       cache: 'no-store',
       headers: {
-        'Authorization': `Bearer ${token}`, 
+        Authorization: `Bearer ${token}`,
       },
     });
 
     if (res.status === 401) {
       redirect('/login');
     }
-    
+
     if (!res.ok) {
       console.error(
         `[Frontend Server] Erro na API! Status: ${res.status}, Texto: ${res.statusText}`
       );
       return null;
     }
-    
-    return res.json();
 
+    return res.json();
   } catch (error) {
     console.error('[Frontend Server] Falha catastrófica no fetch:', error);
     return null;
@@ -58,16 +56,19 @@ async function getSnippetById(id: string): Promise<Snippet | null> {
 }
 
 // O Componente da Página de Edição
-export default function EditSnippetPage(props: EditPageProps) { 
-  
+export default function EditSnippetPage(props: EditPageProps) {
   const params = use(props.params);
   const snippet = use(getSnippetById(params.id));
 
   if (!snippet) {
     return (
       <main className="flex min-h-screen flex-col items-center justify-center p-24 bg-gradient-to-br from-gray-950 to-black">
-        <h1 className="text-4xl font-bold text-red-500">Snippet não encontrado</h1>
-        <p className="text-gray-400 mt-2">Você não tem permissão ou este snippet não existe.</p>
+        <h1 className="text-4xl font-bold text-red-500">
+          Snippet não encontrado
+        </h1>
+        <p className="text-gray-400 mt-2">
+          Você não tem permissão ou este snippet não existe.
+        </p>
         <Link href="/" className="mt-4 text-pink-400 hover:text-pink-300">
           Voltar para Home
         </Link>
@@ -90,7 +91,8 @@ export default function EditSnippetPage(props: EditPageProps) {
                 Editar Snippet
               </h1>
               <p className="text-gray-400 mt-1">
-                Modifique seu snippet: <span className="text-white font-medium">{snippet.title}</span>
+                Modifique seu snippet:{' '}
+                <span className="text-white font-medium">{snippet.title}</span>
               </p>
             </div>
           </div>
@@ -99,13 +101,13 @@ export default function EditSnippetPage(props: EditPageProps) {
 
       <div className="max-w-6xl mx-auto px-6 py-12 lg:px-12 space-y-12">
         <div className="bg-gray-900 rounded-2xl border border-white/10 shadow-xl overflow-hidden">
-          <form
-            action={updateSnippetAction}
-            className="p-8 space-y-6"
-          >
+          <form action={updateSnippetAction} className="p-8 space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label htmlFor="title" className="block text-sm font-medium text-gray-400">
+                <label
+                  htmlFor="title"
+                  className="block text-sm font-medium text-gray-400"
+                >
                   Título
                 </label>
                 <input
@@ -118,7 +120,10 @@ export default function EditSnippetPage(props: EditPageProps) {
                 />
               </div>
               <div className="space-y-2">
-                <label htmlFor="language" className="block text-sm font-medium text-gray-400">
+                <label
+                  htmlFor="language"
+                  className="block text-sm font-medium text-gray-400"
+                >
                   Linguagem
                 </label>
                 <input
@@ -132,7 +137,10 @@ export default function EditSnippetPage(props: EditPageProps) {
               </div>
             </div>
             <div className="space-y-2">
-              <label htmlFor="description" className="block text-sm font-medium text-gray-400">
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium text-gray-400"
+              >
                 Descrição
               </label>
               <input
@@ -144,7 +152,10 @@ export default function EditSnippetPage(props: EditPageProps) {
               />
             </div>
             <div className="space-y-2">
-              <label htmlFor="code" className="block text-sm font-medium text-gray-400">
+              <label
+                htmlFor="code"
+                className="block text-sm font-medium text-gray-400"
+              >
                 Código
               </label>
               <textarea
@@ -156,9 +167,9 @@ export default function EditSnippetPage(props: EditPageProps) {
                 className="w-full bg-gray-800/50 border border-gray-700 rounded-lg px-4 py-3 text-white placeholder:text-gray-500 font-mono focus:outline-none focus:border-[#d965e6] focus:ring-2 focus:ring-[#d965e6]/50 transition-all resize-none"
               />
             </div>
-            
+
             <div className="flex items-center gap-4">
-               <button
+              <button
                 type="submit"
                 className="flex-1 bg-gradient-to-r from-[#d965e6] to-purple-500 hover:from-[#e075ed] hover:to-purple-600 text-white font-bold py-3 px-6 rounded-lg transition-all shadow-lg shadow-[#d965e6]/30 hover:shadow-[#d965e6]/50 flex items-center justify-center gap-2 group"
               >
