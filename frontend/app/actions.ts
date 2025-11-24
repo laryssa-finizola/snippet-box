@@ -19,7 +19,7 @@ export async function loginUser(formData: FormData) {
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
   try {
-    const res = await fetch('http://localhost:8080/auth/login', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/login`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
@@ -29,10 +29,10 @@ export async function loginUser(formData: FormData) {
       throw new Error(data.error || 'Falha no login');
     }
     (await cookies()).set('session_token', data.token, {
-      httpOnly: true, 
-      secure: process.env.NODE_ENV === 'production', 
-      maxAge: 60 * 60 * 24 * 7, 
-      path: '/', 
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      maxAge: 60 * 60 * 24 * 7,
+      path: '/',
     });
   } catch (error) {
     console.error(error);
@@ -41,24 +41,29 @@ export async function loginUser(formData: FormData) {
 }
 
 // --- AÇÃO DE REGISTO  ---
-export async function registerUser(formData: FormData): Promise<{ success: boolean; error?: string }> {
+export async function registerUser(
+  formData: FormData
+): Promise<{ success: boolean; error?: string }> {
   const name = formData.get('name') as string;
   const email = formData.get('email') as string;
   const password = formData.get('password') as string;
   try {
-    const res = await fetch('http://localhost:8080/auth/register', {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/register`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, password }),
     });
-    const data = await res.json(); 
+    const data = await res.json();
     if (!res.ok) {
       return { success: false, error: data.error || 'Falha ao registar' };
     }
     return { success: true };
   } catch (error) {
     console.error(error);
-    return { success: false, error: 'Não foi possível ligar ao servidor. Tente mais tarde.' };
+    return {
+      success: false,
+      error: 'Não foi possível ligar ao servidor. Tente mais tarde.',
+    };
   }
 }
 
@@ -68,15 +73,14 @@ export async function logoutUser() {
   redirect('/login');
 }
 
-
 // ===========================================
-//  AÇÕES DE SNIPPETS 
+//  AÇÕES DE SNIPPETS
 // ===========================================
 
 // --- AÇÃO DE CRIAR SNIPPET  ---
 export async function createSnippet(formData: FormData) {
   const token = await getAuthToken();
-  if (!token) return redirect('/login'); 
+  if (!token) return redirect('/login');
 
   try {
     const title = formData.get('title') as string;
@@ -84,11 +88,11 @@ export async function createSnippet(formData: FormData) {
     const description = formData.get('description') as string;
     const code = formData.get('code') as string;
 
-    const res = await fetch('http://localhost:8080/api/snippets', { 
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/snippets`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': token, 
+        Authorization: token,
       },
       body: JSON.stringify({
         title,
@@ -110,23 +114,25 @@ export async function createSnippet(formData: FormData) {
 
 // --- AÇÃO DE DELETAR SNIPPET ---
 export async function deleteSnippet(id: number) {
-  const token = await getAuthToken(); 
+  const token = await getAuthToken();
   if (!token) return redirect('/login');
 
   try {
-    const res = await fetch(`http://localhost:8080/api/snippets/${id}`, {
-      method: 'DELETE',
-      headers: {
-        'Authorization': token, 
-      },
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/snippets/${id}`,
+      {
+        method: 'DELETE',
+        headers: {
+          Authorization: token,
+        },
+      }
+    );
 
     if (!res.ok) {
       throw new Error('Falha ao deletar snippet');
     }
 
     revalidatePath('/');
-    
   } catch (error) {
     console.error(error);
   }
@@ -134,35 +140,37 @@ export async function deleteSnippet(id: number) {
 
 // --- AÇÃO DE ATUALIZAR SNIPPET ---
 export async function updateSnippet(id: number, formData: FormData) {
-  const token = await getAuthToken(); 
+  const token = await getAuthToken();
   if (!token) return redirect('/login');
-  
+
   try {
     const title = formData.get('title') as string;
     const language = formData.get('language') as string;
     const description = formData.get('description') as string;
     const code = formData.get('code') as string;
 
-    const res = await fetch(`http://localhost:8080/api/snippets/${id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': token,
-      },
-      body: JSON.stringify({
-        title,
-        language,
-        description,
-        code,
-      }),
-    });
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/snippets/${id}`,
+      {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: token,
+        },
+        body: JSON.stringify({
+          title,
+          language,
+          description,
+          code,
+        }),
+      }
+    );
 
     if (!res.ok) {
       throw new Error('Falha ao atualizar snippet');
     }
 
     revalidatePath('/');
-    
   } catch (error) {
     console.error(error);
   }

@@ -15,7 +15,7 @@ export default function LoginPage() {
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">Snippet-Box</h1>
           <p className="text-gray-400">
-            Faça login para aceder aos seus snippets
+            Faça login para salvar seus snippets
           </p>
         </div>
 
