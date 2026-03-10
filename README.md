@@ -175,12 +175,4 @@ Deleta um snippet específico pelo seu ID.
 
 O MVP (CRUD) está completo. Os próximos passos são:
 
-* [ ] **Autenticação:**
-    * **Backend:** Implementar rotas `/register` e `/login` com JWT.
-    * **Backend:** Proteger rotas de CRUD (só o "dono" pode alterar/deletar).
-    * **Frontend:** Criar as páginas de Login e Registro.
-* [ ] **Polimento:**
-    * **Frontend:** Adicionar **Syntax Highlighting** para exibir o código formatado.
-* [ ] **Deploy:**
-    * **Backend:** Fazer deploy da API no **Render**.
-    * **Frontend:** Fazer deploy do site na **Vercel**.
+--
