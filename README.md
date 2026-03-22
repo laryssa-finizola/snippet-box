@@ -170,9 +170,3 @@ Deleta um snippet específico pelo seu ID.
     (Nenhum conteúdo é retornado)
 
 ---
-
-## 🎯 Próximos Passos (Roadmap)
-
-O MVP (CRUD) está completo. Os próximos passos são:
-
---
