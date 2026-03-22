@@ -2,107 +2,67 @@
 
 ![Status](https://img.shields.io/badge/status-MVP_funcional-green)
 
-Um gerenciador de snippets de código full-stack. Este projeto foi criado como parte do meu portfólio para demonstrar habilidades em uma arquitetura **monorepo** com:
+Um gerenciador de snippets de código full-stack. Este projeto foi criado como parte do meu portfólio para demonstrar habilidades de desenvolvimento utilizando o ecossistema unificado do Next.js com as seguintes tecnologias:
 
-* **Backend:** Node.js, Express, Prisma (com SQLite) e TypeScript.
-* **Frontend:** Next.js, React, TailwindCSS e TypeScript (com Server Actions).
-
----
-
-## 🏛️ Estrutura do Projeto (Monorepo)
-
-Este repositório contém dois projetos independentes que trabalham juntos:
-
-* `./backend/`: A API RESTful (Node.js/Express) que gerencia os dados.
-* `./frontend/`: A aplicação web (Next.js/React) que consome a API.
+* **Framework:** Next.js (App Router & API Routes)
+* **Frontend:** React, TailwindCSS e TypeScript
+* **Banco de Dados:** Prisma (ORM) com SQLite
 
 ---
 
 ## 🛠️ Tecnologias Utilizadas
 
-| Backend | Frontend |
+| Tecnologia | Descrição |
 | --- | --- |
-| Node.js | Next.js 14 (App Router) |
-| Express | React 18 |
-| Prisma (ORM) | TailwindCSS |
-| SQLite | TypeScript |
-| TypeScript | Server Actions |
-
----
-
-## STATUS ATUAL (MVP Concluído)
-
-* **[✅] Backend:**
-    * Servidor Node.js + Express + TS configurado.
-    * Banco de dados SQLite configurado com Prisma.
-    * Migração inicial (`User`, `Snippet`) concluída.
-    * Endpoint `POST /api/snippets` (Create) funcional.
-    * Endpoint `GET /api/snippets` (Read All) funcional.
-    * Endpoint `GET /api/snippets/:id` (Read One) funcional.
-    * Endpoint `PUT /api/snippets/:id` (Update) funcional.
-    * Endpoint `DELETE /api/snippets/:id` (Delete) funcional.
-* **[✅] Frontend:**
-    * Projeto Next.js 14 inicializado com App Router.
-    * Conectado à API (GET, POST, PUT, DELETE).
-    * Página principal (`/`) com formulário de criação e lista de snippets.
-    * Página de edição (`/snippets/[id]/edit`) com formulário pré-preenchido.
-    * Server Actions para `create`, `delete` e `update` sem `fetch` no lado do cliente.
+| **Next.js 14+** | Framework React full-stack |
+| **React 18+** | Biblioteca de UI |
+| **Prisma** | ORM para comunicação com o banco de dados |
+| **SQLite** | Banco de dados relacional leve |
+| **TailwindCSS** | Estilização utilitária |
+| **TypeScript** | Tipagem estática |
 
 ---
 
 ## 🚀 Como Rodar Localmente
 
-Para rodar este projeto, você precisará de **dois terminais** abertos simultaneamente.
+Como o projeto agora é unificado, você precisará de apenas **um terminal** para rodar toda a aplicação.
 
-### 1. Backend (Terminal 1)
-
-1.  **Navegue até a pasta do backend:**
+1.  **Clone o repositório e acesse a pasta do projeto:**
     ```bash
-    cd snippet-box/backend
+    git clone <URL_DO_SEU_REPOSITORIO>
+    cd snippet-box
     ```
+
 2.  **Instale as dependências:**
     ```bash
     npm install
     ```
-3.  **Crie o arquivo `.env`**
-    Crie um arquivo `.env` na raiz da pasta `backend` e adicione a seguinte linha:
+
+3.  **Configure as Variáveis de Ambiente:**
+    Crie um arquivo `.env` na raiz do projeto e adicione a seguinte linha para o banco de dados:
     ```env
-    DATABASE_URL="file:./dev.db"
+    DATABASE_URL="file:./prisma/dev.db"
     ```
+
 4.  **Rode as migrações do Prisma:**
-    (Este comando cria o banco `dev.db` com as tabelas `User` e `Snippet`)
+    (Este comando cria o banco de dados e as tabelas `User` e `Snippet`)
     ```bash
     npx prisma migrate dev
     ```
+
 5.  **Rode o servidor de desenvolvimento:**
     ```bash
     npm run dev
     ```
-    O servidor do backend estará rodando em `http://localhost:8080`.
-
-### 2. Frontend (Terminal 2)
-
-1.  **Navegue até a pasta do frontend:**
-    ```bash
-    cd snippet-box/frontend
-    ```
-2.  **Instale as dependências:**
-    ```bash
-    npm install
-    ```
-3.  **Rode o servidor de desenvolvimento:**
-    ```bash
-    npm run dev
-    ```
-    A aplicação web estará rodando em `http://localhost:3000`.
+    A aplicação web e a API estarão rodando simultaneamente em `http://localhost:3000`.
 
 ---
 
 ## 📋 API Endpoints (CRUD Completo)
 
-Abaixo estão todos os endpoints da API implementados.
+Abaixo estão todos os endpoints da API implementados nativamente no Next.js.
 
-**URL Base:** `http://localhost:8080`
+**URL Base:** `http://localhost:3000`
 
 ### 1. Criar um Snippet
 Cria um novo snippet de código.
@@ -118,14 +78,13 @@ Cria um novo snippet de código.
       "code": "console.log('Olá');"
     }
     ```
-* **Nota:** Atualmente, o `authorId` está "hardcoded" (fixo) como `1` para fins de teste.
+* **Nota:** Atualmente, o `authorId` está fixo como `1` para fins de teste.
 
 ### 2. Listar todos os Snippets
 Busca todos os snippets salvos no banco de dados.
 
 * **Método:** `GET`
 * **URL:** `/api/snippets`
-* **Nota:** Atualmente, este endpoint busca snippets de *todos* os usuários.
 
 ### 3. Buscar um Snippet
 Busca um snippet específico pelo seu ID.
@@ -158,15 +117,9 @@ Atualiza um snippet específico pelo seu ID.
       "code": "console.log('Novo');"
     }
     ```
-* **Resposta de Sucesso (200 - OK):**
-    (Retorna o snippet atualizado)
 
 ### 5. Deletar um Snippet
 Deleta um snippet específico pelo seu ID.
 
 * **Método:** `DELETE`
 * **URL:** `/api/snippets/:id` (ex: `/api/snippets/1`)
-* **Resposta de Sucesso (204 - No Content):**
-    (Nenhum conteúdo é retornado)
-
----
